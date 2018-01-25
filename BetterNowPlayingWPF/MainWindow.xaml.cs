@@ -15,8 +15,6 @@ namespace BetterNowPlayingWPF
         public MainWindow()
         {
             InitializeComponent();
-            //Now_Playing.Text = "This is now playing stuff!";
-            //Request_List.Text += "This is Request List stuff!\n";
         }
 
         private void OnTimedEvent(object source, ElapsedEventArgs e) // event method to call on timer
