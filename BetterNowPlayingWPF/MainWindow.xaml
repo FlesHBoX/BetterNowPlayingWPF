@@ -7,6 +7,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Label Content="Now Playing" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="79"/>
+        <Button Content="Start" HorizontalAlignment="Left" Margin="352,10,0,0" VerticalAlignment="Top" Width="75" Click="Start_Button"/>
+        <Button Content="Stop" Margin="432,10,10,0" VerticalAlignment="Top" Click="Stop_Button"/>
+        <TextBox x:Name="Now_Playing" Height="23" Margin="10,36,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsReadOnly="True"/>
+        <Label Content="Requests" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top"/>
+        <TextBlock x:Name="Request_List" HorizontalAlignment="Left" Margin="10,90,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="219" Width="341" IsEnabled="False"/>
     </Grid>
 </Window>
