@@ -23,12 +23,23 @@ namespace BetterNowPlayingWPF
             string requestedBy = System.IO.File.ReadAllText($@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Streamlabs\Streamlabs Chatbot\Twitch\Files\RequestedBy.txt").Trim();
             string currentSong = System.IO.File.ReadAllText($@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Streamlabs\Streamlabs Chatbot\Twitch\Files\CurrentSong.txt").Trim();
             string playingOutput = "";
+            string song;
+            string separator;
 
             // Split artist and song from rest of string
             string[] substrings = currentSong.Split('-');
 
             // Trim any whitespace from song and artist after splitting them out
-            string song = substrings[1].Trim();
+            if(substrings.Length >= 2)
+            {
+                song = substrings[1].Trim();
+                separator = " by ";
+            }
+            else
+            {
+                song = "";
+                separator = "";
+            }
             string artist = substrings[0].Trim();
 
             if (GlobalThings.previousSong == "" || GlobalThings.previousArtist == "")   // This should only ever resolve to tru on app launch
@@ -38,7 +49,7 @@ namespace BetterNowPlayingWPF
                 GlobalThings.previousArtist = artist;
 
                 // Fill in now playing information so that this is not blank in the console on startup
-                GlobalThings.consoleNowPlaying = $"{song} by {artist}";
+                GlobalThings.consoleNowPlaying = $"{song}{separator}{artist}";
                 Dispatcher.Invoke(() => { Now_Playing.Text = GlobalThings.consoleNowPlaying; });
             };
 
