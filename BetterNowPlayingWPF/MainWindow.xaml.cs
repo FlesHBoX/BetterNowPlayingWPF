@@ -145,5 +145,10 @@ namespace BetterNowPlayingWPF
             readSongDataTimer.Stop();
             readSongDataTimer.Dispose();
         }
+
+        private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
