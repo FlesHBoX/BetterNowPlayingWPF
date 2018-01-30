@@ -25,8 +25,10 @@ namespace BetterNowPlayingWPF
             string playingOutput = "";
             string song;
             string separator;
+            string whitespace = "                                                             "; // Padding for obs scrolling text.  Need to make this configurable sometime.
 
             // Split artist and song from rest of string
+            int idx = currentSong.LastIndexOf('-');
             string[] substrings = currentSong.Split('-');
 
             // Trim any whitespace from song and artist after splitting them out
@@ -63,14 +65,14 @@ namespace BetterNowPlayingWPF
                 {
                     // Update necessary vars for song change
                     GlobalThings.consoleNowPlaying = $"{song} by {artist}";
-                    playingOutput = $"                                                             🎶 Currently Playing: {song} by {artist} - Request A Song Using !sr in chat 🎶";   // Whitespace is to pad text scroll in obs
+                    playingOutput = $"{whitespace}🎶 Currently Playing: {song} by {artist} - Request A Song Using !sr in chat 🎶";
                 }
                 else
                 {
                     // Update necessary vars for song change and new song request
                     GlobalThings.consoleNowPlaying = $"{song} by {artist} | Requested by {requestedBy}";
                     string newSongRequestText = $"[{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}] SONG REQUEST: {artist} - {song} | Requested by {requestedBy}" + Environment.NewLine;
-                    playingOutput = $"                                                             🎶 Currently Playing: {song} by {artist}, requested by {requestedBy} - Request A Song Using !sr in chat 🎶";   // Whitespace is to pad the text scroll in obs
+                    playingOutput = $"{whitespace}🎶 Currently Playing: {song} by {artist}, requested by {requestedBy} - Request A Song Using !sr in chat 🎶";
 
                     // Log new song request to console and increment line counter for next song request
                     Dispatcher.Invoke(() => { Request_List.Text += newSongRequestText; });
