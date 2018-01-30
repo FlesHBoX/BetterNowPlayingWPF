@@ -27,9 +27,8 @@ namespace BetterNowPlayingWPF
             string separator;
             string whitespace = "                                                             "; // Padding for obs scrolling text.  Need to make this configurable sometime.
 
-            // Split artist and song from rest of string
-            int idx = currentSong.LastIndexOf('-');
-            string[] substrings = currentSong.Split('-');
+            // Split artist and song from rest of string            
+            string[] substrings = SplitByLastIndex(currentSong,'-');
 
             // Trim any whitespace from song and artist after splitting them out
             if(substrings.Length >= 2)
@@ -93,6 +92,37 @@ namespace BetterNowPlayingWPF
             }
 
 
+        }
+
+        public static string[] SplitByLastIndex(string input, char divider)
+        {
+            int arrayLength = 0;
+            int index = input.LastIndexOf(divider);
+            if (index == -1)
+            {
+                arrayLength = 1;
+            }
+            else
+            {
+                arrayLength = 2;
+            }
+
+            int pass = 1;
+            string[] returnString = new string[arrayLength];
+            for(int i = 0; i < arrayLength; i++)
+            {
+                if (pass == 1)
+                {
+                    returnString[i] = input.Substring(0, index - 1);
+                    pass = 2;
+                }
+                else
+                {
+                    returnString[i] = input.Substring(index+1);
+                }
+            }
+
+            return returnString;
         }
 
         public static class GlobalThings    // Collection of variables that wen need inside the timed event class that we don't want reinitialized on every event.
