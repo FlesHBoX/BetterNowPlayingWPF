@@ -10,18 +10,18 @@ namespace BetterNowPlayingWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static Timer aTimer;
+        private static Timer readSongDataTimer;
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private void OnTimedEvent(object source, ElapsedEventArgs e) // event method to call on timer
+        private void ReadSongData(object source, ElapsedEventArgs e) // event method to call on timer
         {
             // Read information from streamlabs chatbot text files and init playingOutput for new text file.
-            string requestedBy = System.IO.File.ReadAllText(@"C:\Users\Jesse\AppData\Roaming\Streamlabs\Streamlabs Chatbot\Twitch\Files\RequestedBy.txt").Trim();
-            string currentSong = System.IO.File.ReadAllText(@"C:\Users\Jesse\AppData\Roaming\Streamlabs\Streamlabs Chatbot\Twitch\Files\CurrentSong.txt").Trim();
+            string requestedBy = System.IO.File.ReadAllText($@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Streamlabs\Streamlabs Chatbot\Twitch\Files\RequestedBy.txt").Trim();
+            string currentSong = System.IO.File.ReadAllText($@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Streamlabs\Streamlabs Chatbot\Twitch\Files\CurrentSong.txt").Trim();
             string playingOutput = "";
 
             // Split artist and song from rest of string
@@ -31,7 +31,7 @@ namespace BetterNowPlayingWPF
             string song = substrings[1].Trim();
             string artist = substrings[0].Trim();
 
-            if (GlobalThings.previousSong == "" && GlobalThings.previousArtist == "")   // This should only ever resolve to tru on app launch
+            if (GlobalThings.previousSong == "" || GlobalThings.previousArtist == "")   // This should only ever resolve to tru on app launch
             {
                 // Set previous song and artist so that it does not falsly detect a new song playing on startup
                 GlobalThings.previousSong = song;
@@ -82,11 +82,6 @@ namespace BetterNowPlayingWPF
 
         }
 
-        private void bob()
-        {
-            Now_Playing.Text = "bob";
-        }
-
         public static class GlobalThings    // Collection of variables that wen need inside the timed event class that we don't want reinitialized on every event.
         {
             public static string previousSong = ""; // previous song and artist for comparison to detect song changes on each event
@@ -96,16 +91,16 @@ namespace BetterNowPlayingWPF
 
         private void Start_Button(object sender, RoutedEventArgs e)
         {
-            aTimer = new Timer(1000);
+            readSongDataTimer = new Timer(1000);
 
-            aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-            aTimer.Enabled = true;
+            readSongDataTimer.Elapsed += new ElapsedEventHandler(ReadSongData);
+            readSongDataTimer.Enabled = true;
         }
 
         private void Stop_Button(object sender, RoutedEventArgs e)
         {
-            aTimer.Stop();
-            aTimer.Dispose();
+            readSongDataTimer.Stop();
+            readSongDataTimer.Dispose();
         }
     }
 }
