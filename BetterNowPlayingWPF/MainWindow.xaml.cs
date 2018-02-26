@@ -20,11 +20,10 @@ namespace BetterNowPlayingWPF
         private void ReadSongData(object source, ElapsedEventArgs e) // event method to call on timer
         {
             // Read information from streamlabs chatbot text files and init playingOutput for new text file.
-            string requestedBy = System.IO.File.ReadAllText($@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Streamlabs\Streamlabs Chatbot\Twitch\Files\RequestedBy.txt").Trim();
-            string currentSong = System.IO.File.ReadAllText($@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Streamlabs\Streamlabs Chatbot\Twitch\Files\CurrentSong.txt").Trim();
+            string requestedBy = System.IO.File.ReadAllText($@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Streamlabs\Streamlabs Chatbot\Services\Twitch\Files\RequestedBy.txt").Trim();
+            string currentSong = System.IO.File.ReadAllText($@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Streamlabs\Streamlabs Chatbot\Services\Twitch\Files\CurrentSong.txt").Trim();
             string playingOutput = "";
             string song;
-            string separator;
             string whitespace = "                                                             "; // Padding for obs scrolling text.  Need to make this configurable sometime.
 
             // Split artist and song from rest of string            
@@ -33,13 +32,11 @@ namespace BetterNowPlayingWPF
             // Trim any whitespace from song and artist after splitting them out
             if(substrings.Length >= 2)
             {
-                song = substrings[1].Trim();
-                separator = " by ";
+                song = substrings[1].Trim()+" by ";
             }
             else
             {
-                song = "";
-                separator = "";
+                song = " ";
             }
             string artist = substrings[0].Trim();
 
@@ -50,11 +47,11 @@ namespace BetterNowPlayingWPF
                 GlobalThings.previousArtist = artist;
 
                 // Fill in now playing information so that this is not blank in the console on startup
-                GlobalThings.consoleNowPlaying = $"{song}{separator}{artist}";
+                GlobalThings.consoleNowPlaying = $"{song}{artist}";
                 Dispatcher.Invoke(() => { Now_Playing.Text = GlobalThings.consoleNowPlaying; });
             };
 
-            if (song == GlobalThings.previousSong || artist == GlobalThings.previousArtist)   // Just update ticker if the song has not changed
+            if (song == GlobalThings.previousSong && artist == GlobalThings.previousArtist)   // Just update ticker if the song has not changed
             {
                 
             }
@@ -63,15 +60,15 @@ namespace BetterNowPlayingWPF
                 if (requestedBy.ToLower() == "fleshbox")    // Don't want the "requested by" tacked on if it's not an actual song request
                 {
                     // Update necessary vars for song change
-                    GlobalThings.consoleNowPlaying = $"{song} by {artist}";
-                    playingOutput = $"{whitespace}🎶 Currently Playing: {song} by {artist} - Request A Song Using !sr in chat 🎶";
+                    GlobalThings.consoleNowPlaying = $"{song}{artist}";
+                    playingOutput = $"{whitespace}🎶 Currently Playing: {song}{artist} - Request A Song Using !sr in chat 🎶";
                 }
                 else
                 {
                     // Update necessary vars for song change and new song request
-                    GlobalThings.consoleNowPlaying = $"{song} by {artist} | Requested by {requestedBy}";
+                    GlobalThings.consoleNowPlaying = $"{song}{artist} | Requested by {requestedBy}";
                     string newSongRequestText = $"[{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}] SONG REQUEST: {artist} - {song} | Requested by {requestedBy}" + Environment.NewLine;
-                    playingOutput = $"{whitespace}🎶 Currently Playing: {song} by {artist}, requested by {requestedBy} - Request A Song Using !sr in chat 🎶";
+                    playingOutput = $"{whitespace}🎶 Currently Playing: {song}{artist}, requested by {requestedBy} - Request A Song Using !sr in chat 🎶";
 
                     // Log new song request to console and increment line counter for next song request
                     Dispatcher.Invoke(() => { Request_List.Text += newSongRequestText; });
